@@ -18,6 +18,7 @@ import java.util.concurrent.Future;
 
 @RestController
 @RequestMapping("/film/")
+@CrossOrigin(origins = "*",maxAge = 3600)
 public class FilmController {
 
     private static final String img_pre = "http://img.meetingshop.cn/";
@@ -40,9 +41,6 @@ public class FilmController {
      */
     @RequestMapping(value = "getIndex",method = RequestMethod.GET)
     public ResponseVO<FilmIndexVO> getIndex(){
-        // 测试Lombok
-//        BannerVO bannerVO = new BannerVO();
-//        bannerVO.setBannerAddress("");
         FilmIndexVO filmIndexVO = new FilmIndexVO();
         // 获取banner信息
         filmIndexVO.setBanners(filmServiceApi.getBanners());
