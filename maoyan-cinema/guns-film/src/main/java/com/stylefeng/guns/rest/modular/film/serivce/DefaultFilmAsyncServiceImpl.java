@@ -15,28 +15,28 @@ import java.util.List;
 public class DefaultFilmAsyncServiceImpl implements FilmAsyncServiceApi {
 
     @Autowired
-    private MoocFilmInfoTMapper moocFilmInfoTMapper;
+    private FilmInfoTMapper filmInfoTMapper;
 
     @Autowired
-    private MoocActorTMapper moocActorTMapper;
+    private ActorTMapper ActorTMapper;
 
-    private MoocFilmInfoT getFilmInfo(String filmId){
+    private FilmInfoT getFilmInfo(String filmId){
 
-        MoocFilmInfoT moocFilmInfoT = new MoocFilmInfoT();
-        moocFilmInfoT.setFilmId(filmId);
+        FilmInfoT FilmInfoT = new FilmInfoT();
+        FilmInfoT.setFilmId(filmId);
 
-        moocFilmInfoT = moocFilmInfoTMapper.selectOne(moocFilmInfoT);
+        FilmInfoT = filmInfoTMapper.selectOne(FilmInfoT);
 
-        return moocFilmInfoT;
+        return FilmInfoT;
     }
 
     @Override
     public FilmDescVO getFilmDesc(String filmId) {
 
-        MoocFilmInfoT moocFilmInfoT = getFilmInfo(filmId);
+        FilmInfoT FilmInfoT = getFilmInfo(filmId);
 
         FilmDescVO filmDescVO = new FilmDescVO();
-        filmDescVO.setBiography(moocFilmInfoT.getBiography());
+        filmDescVO.setBiography(FilmInfoT.getBiography());
         filmDescVO.setFilmId(filmId);
 
         return filmDescVO;
@@ -45,9 +45,9 @@ public class DefaultFilmAsyncServiceImpl implements FilmAsyncServiceApi {
     @Override
     public ImgVO getImgs(String filmId) {
 
-        MoocFilmInfoT moocFilmInfoT = getFilmInfo(filmId);
+        FilmInfoT FilmInfoT = getFilmInfo(filmId);
         // 图片地址是五个以逗号为分隔的链接URL
-        String filmImgStr = moocFilmInfoT.getFilmImgs();
+        String filmImgStr = FilmInfoT.getFilmImgs();
         String[] filmImgs = filmImgStr.split(",");
 
         ImgVO imgVO = new ImgVO();
@@ -63,16 +63,16 @@ public class DefaultFilmAsyncServiceImpl implements FilmAsyncServiceApi {
     @Override
     public ActorVO getDectInfo(String filmId) {
 
-        MoocFilmInfoT moocFilmInfoT = getFilmInfo(filmId);
+        FilmInfoT FilmInfoT = getFilmInfo(filmId);
 
         // 获取导演编号
-        Integer directId = moocFilmInfoT.getDirectorId();
+        Integer directId = FilmInfoT.getDirectorId();
 
-        MoocActorT moocActorT = moocActorTMapper.selectById(directId);
+        ActorT ActorT = ActorTMapper.selectById(directId);
 
         ActorVO actorVO = new ActorVO();
-        actorVO.setImgAddress(moocActorT.getActorImg());
-        actorVO.setDirectorName(moocActorT.getActorName());
+        actorVO.setImgAddress(ActorT.getActorImg());
+        actorVO.setDirectorName(ActorT.getActorName());
 
         return actorVO;
     }
@@ -80,7 +80,7 @@ public class DefaultFilmAsyncServiceImpl implements FilmAsyncServiceApi {
     @Override
     public List<ActorVO> getActors(String filmId) {
 
-        List<ActorVO> actors = moocActorTMapper.getActors(filmId);
+        List<ActorVO> actors = ActorTMapper.getActors(filmId);
 
         return actors;
     }

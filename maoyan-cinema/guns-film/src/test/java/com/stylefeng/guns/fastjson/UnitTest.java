@@ -13,12 +13,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class UnitTest {
 
     @Autowired
-    private DefaultFilmServiceImpl moocFilmTMapper;
+    private DefaultFilmServiceImpl FilmTMapper;
 
     @Test
     public void test(){
 
-        moocFilmTMapper.getHotFilms(false,10,1,1,99,99,99);
+        FilmTMapper.getHotFilms(false,10,1,1,99,99,99);
 
     }
 

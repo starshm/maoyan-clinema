@@ -21,7 +21,7 @@ import java.util.concurrent.Future;
 @CrossOrigin(origins = "*",maxAge = 3600)
 public class FilmController {
 
-    private static final String img_pre = "http://img.meetingshop.cn/";
+    private static final String IMG_PRE = "http://img.meetingshop.cn/";
 
     @Reference(interfaceClass = FilmServiceApi.class,check = false)
     private FilmServiceApi filmServiceApi;
@@ -55,7 +55,7 @@ public class FilmController {
         // 获取前一百
         filmIndexVO.setTop100(filmServiceApi.getTop());
 
-        return ResponseVO.success(filmIndexVO);
+        return ResponseVO.success(IMG_PRE,filmIndexVO);
     }
 
 
@@ -254,7 +254,7 @@ public class FilmController {
         // 组织成返回值
         filmDetail.setInfo04(infoRequstVO);
 
-        return ResponseVO.success("http://img.meetingshop.cn/",filmDetail);
+        return ResponseVO.success(IMG_PRE,filmDetail);
     }
 
 }

@@ -54,7 +54,7 @@ public class ResponseVO<M> {
 
         return responseVO;
     }
-
+    // 业务异常
     public static<M> ResponseVO serviceFail(String msg){
         ResponseVO responseVO = new ResponseVO();
         responseVO.setStatus(1);
@@ -62,7 +62,7 @@ public class ResponseVO<M> {
 
         return responseVO;
     }
-
+    // 系统异常
     public static<M> ResponseVO appFail(String msg){
         ResponseVO responseVO = new ResponseVO();
         responseVO.setStatus(999);

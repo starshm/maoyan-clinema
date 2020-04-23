@@ -19,55 +19,55 @@ import java.util.List;
 public class DefaultFilmServiceImpl implements FilmServiceApi {
 
     @Autowired
-    private MoocBannerTMapper moocBannerTMapper;
+    private BannerTMapper bannerTMapper;
 
     @Autowired
-    private MoocFilmTMapper moocFilmTMapper;
+    private FilmTMapper filmTMapper;
 
     @Autowired
-    private MoocCatDictTMapper moocCatDictTMapper;
+    private CatDictTMapper CatDictTMapper;
 
     @Autowired
-    private MoocYearDictTMapper moocYearDictTMapper;
+    private YearDictTMapper YearDictTMapper;
 
     @Autowired
-    private MoocSourceDictTMapper moocSourceDictTMapper;
+    private SourceDictTMapper sourceDictTMapper;
 
     @Autowired
-    private MoocFilmInfoTMapper moocFilmInfoTMapper;
+    private FilmInfoTMapper FilmInfoTMapper;
 
     @Autowired
-    private MoocActorTMapper moocActorTMapper;
+    private ActorTMapper ActorTMapper;
 
     @Override
     public List<BannerVO> getBanners() {
         List<BannerVO> result = new ArrayList<>();
-        List<MoocBannerT> moocBanners = moocBannerTMapper.selectList(null);
+        List<BannerT> Banners = bannerTMapper.selectList(null);
 
-        for(MoocBannerT moocBannerT : moocBanners){
+        for(BannerT BannerT : Banners){
             BannerVO bannerVO = new BannerVO();
-            bannerVO.setBannerId(moocBannerT.getUuid()+"");
-            bannerVO.setBannerUrl(moocBannerT.getBannerUrl());
-            bannerVO.setBannerAddress(moocBannerT.getBannerAddress());
+            bannerVO.setBannerId(BannerT.getUuid()+"");
+            bannerVO.setBannerUrl(BannerT.getBannerUrl());
+            bannerVO.setBannerAddress(BannerT.getBannerAddress());
             result.add(bannerVO);
         }
 
         return result;
     }
 
-    private List<FilmInfo> getFilmInfos(List<MoocFilmT> moocFilms){
+    private List<FilmInfo> getFilmInfos(List<FilmT> Films){
         List<FilmInfo> filmInfos = new ArrayList<>();
-        for(MoocFilmT moocFilmT : moocFilms){
+        for(FilmT FilmT : Films){
             FilmInfo filmInfo = new FilmInfo();
-            filmInfo.setScore(moocFilmT.getFilmScore());
-            filmInfo.setImgAddress(moocFilmT.getImgAddress());
-            filmInfo.setFilmType(moocFilmT.getFilmType());
-            filmInfo.setFilmScore(moocFilmT.getFilmScore());
-            filmInfo.setFilmName(moocFilmT.getFilmName());
-            filmInfo.setFilmId(moocFilmT.getUuid()+"");
-            filmInfo.setExpectNum(moocFilmT.getFilmPresalenum());
-            filmInfo.setBoxNum(moocFilmT.getFilmBoxOffice());
-            filmInfo.setShowTime(DateUtil.getDay(moocFilmT.getFilmTime()));
+            filmInfo.setScore(FilmT.getFilmScore());
+            filmInfo.setImgAddress(FilmT.getImgAddress());
+            filmInfo.setFilmType(FilmT.getFilmType());
+            filmInfo.setFilmScore(FilmT.getFilmScore());
+            filmInfo.setFilmName(FilmT.getFilmName());
+            filmInfo.setFilmId(FilmT.getUuid()+"");
+            filmInfo.setExpectNum(FilmT.getFilmPresalenum());
+            filmInfo.setBoxNum(FilmT.getFilmBoxOffice());
+            filmInfo.setShowTime(DateUtil.getDay(FilmT.getFilmTime()));
 
             // 将转换的对象放入结果集
             filmInfos.add(filmInfo);
@@ -82,20 +82,23 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
         List<FilmInfo> filmInfos = new ArrayList<>();
 
         // 热映影片的限制条件
-        EntityWrapper<MoocFilmT> entityWrapper = new EntityWrapper<>();
+        EntityWrapper<FilmT> entityWrapper = new EntityWrapper<>();
         entityWrapper.eq("film_status","1");
         // 判断是否是首页需要的内容
         if(isLimit){
             // 如果是，则限制条数、限制内容为热映影片
-            Page<MoocFilmT> page = new Page<>(1,nums);
-            List<MoocFilmT> moocFilms = moocFilmTMapper.selectPage(page, entityWrapper);
+            Page<FilmT> page = new Page<>(1,nums);
+            List<FilmT> films = filmTMapper.selectPage(page, entityWrapper);
             // 组织filmInfos
-            filmInfos = getFilmInfos(moocFilms);
-            filmVO.setFilmNum(moocFilms.size());
+            filmInfos = getFilmInfos(films);
             filmVO.setFilmInfo(filmInfos);
+
+            // filmNum 为正在热映的全部影片
+            Integer count = filmTMapper.selectCount(entityWrapper);
+            filmVO.setFilmNum(count);
         }else{
             // 如果不是，则是列表页，同样需要限制内容为热映影片
-            Page<MoocFilmT> page = null;
+            Page<FilmT> page = null;
             // 根据sortId的不同，来组织不同的Page对象
             // 1-按热门搜索，2-按时间搜索，3-按评价搜索
             switch (sortId){
@@ -126,14 +129,14 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
                 entityWrapper.like("film_cats",catStr);
             }
 
-            List<MoocFilmT> moocFilms = moocFilmTMapper.selectPage(page, entityWrapper);
+            List<FilmT> Films = filmTMapper.selectPage(page, entityWrapper);
             // 组织filmInfos
-            filmInfos = getFilmInfos(moocFilms);
-            filmVO.setFilmNum(moocFilms.size());
+            filmInfos = getFilmInfos(Films);
+            filmVO.setFilmNum(Films.size());
 
             // 需要总页数 totalCounts/nums -> 0 + 1 = 1
             // 每页10条，我现在有6条 -> 1
-            int totalCounts = moocFilmTMapper.selectCount(entityWrapper);
+            int totalCounts = filmTMapper.selectCount(entityWrapper);
             int totalPages = (totalCounts/nums)+1;
 
             filmVO.setFilmInfo(filmInfos);
@@ -150,20 +153,22 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
         List<FilmInfo> filmInfos = new ArrayList<>();
 
         // 即将上映影片的限制条件
-        EntityWrapper<MoocFilmT> entityWrapper = new EntityWrapper<>();
+        EntityWrapper<FilmT> entityWrapper = new EntityWrapper<>();
         entityWrapper.eq("film_status","2");
         // 判断是否是首页需要的内容
         if(isLimit){
             // 如果是，则限制条数、限制内容为热映影片
-            Page<MoocFilmT> page = new Page<>(1,nums);
-            List<MoocFilmT> moocFilms = moocFilmTMapper.selectPage(page, entityWrapper);
+            Page<FilmT> page = new Page<>(1,nums);
+            List<FilmT> Films = filmTMapper.selectPage(page, entityWrapper);
             // 组织filmInfos
-            filmInfos = getFilmInfos(moocFilms);
-            filmVO.setFilmNum(moocFilms.size());
+            filmInfos = getFilmInfos(Films);
             filmVO.setFilmInfo(filmInfos);
+
+            Integer count = filmTMapper.selectCount(entityWrapper);
+            filmVO.setFilmNum(count);
         }else{
             // 如果不是，则是列表页，同样需要限制内容为即将上映影片
-            Page<MoocFilmT> page = null;
+            Page<FilmT> page = null;
             // 根据sortId的不同，来组织不同的Page对象
             // 1-按热门搜索，2-按时间搜索，3-按评价搜索
             switch (sortId){
@@ -194,14 +199,14 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
                 entityWrapper.like("film_cats",catStr);
             }
 
-            List<MoocFilmT> moocFilms = moocFilmTMapper.selectPage(page, entityWrapper);
+            List<FilmT> Films = filmTMapper.selectPage(page, entityWrapper);
             // 组织filmInfos
-            filmInfos = getFilmInfos(moocFilms);
-            filmVO.setFilmNum(moocFilms.size());
+            filmInfos = getFilmInfos(Films);
+            filmVO.setFilmNum(Films.size());
 
             // 需要总页数 totalCounts/nums -> 0 + 1 = 1
             // 每页10条，我现在有6条 -> 1
-            int totalCounts = moocFilmTMapper.selectCount(entityWrapper);
+            int totalCounts = filmTMapper.selectCount(entityWrapper);
             int totalPages = (totalCounts/nums)+1;
 
             filmVO.setFilmInfo(filmInfos);
@@ -218,11 +223,11 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
         List<FilmInfo> filmInfos = new ArrayList<>();
 
         // 即将上映影片的限制条件
-        EntityWrapper<MoocFilmT> entityWrapper = new EntityWrapper<>();
+        EntityWrapper<FilmT> entityWrapper = new EntityWrapper<>();
         entityWrapper.eq("film_status","3");
 
         // 如果不是，则是列表页，同样需要限制内容为即将上映影片
-        Page<MoocFilmT> page = null;
+        Page<FilmT> page = null;
         // 根据sortId的不同，来组织不同的Page对象
         // 1-按热门搜索，2-按时间搜索，3-按评价搜索
         switch (sortId){
@@ -253,14 +258,14 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
             entityWrapper.like("film_cats",catStr);
         }
 
-        List<MoocFilmT> moocFilms = moocFilmTMapper.selectPage(page, entityWrapper);
+        List<FilmT> Films = filmTMapper.selectPage(page, entityWrapper);
         // 组织filmInfos
-        filmInfos = getFilmInfos(moocFilms);
-        filmVO.setFilmNum(moocFilms.size());
+        filmInfos = getFilmInfos(Films);
+        filmVO.setFilmNum(Films.size());
 
         // 需要总页数 totalCounts/nums -> 0 + 1 = 1
         // 每页10条，我现在有6条 -> 1
-        int totalCounts = moocFilmTMapper.selectCount(entityWrapper);
+        int totalCounts = filmTMapper.selectCount(entityWrapper);
         int totalPages = (totalCounts/nums)+1;
 
         filmVO.setFilmInfo(filmInfos);
@@ -274,14 +279,14 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
     @Override
     public List<FilmInfo> getBoxRanking() {
         // 条件 -> 正在上映的，票房前10名
-        EntityWrapper<MoocFilmT> entityWrapper = new EntityWrapper<>();
+        EntityWrapper<FilmT> entityWrapper = new EntityWrapper<>();
         entityWrapper.eq("film_status","1");
 
-        Page<MoocFilmT> page = new Page<>(1,10,"film_box_office");
+        Page<FilmT> page = new Page<>(1,10,"film_box_office");
 
-        List<MoocFilmT> moocFilms = moocFilmTMapper.selectPage(page,entityWrapper);
+        List<FilmT> Films = filmTMapper.selectPage(page,entityWrapper);
 
-        List<FilmInfo> filmInfos = getFilmInfos(moocFilms);
+        List<FilmInfo> filmInfos = getFilmInfos(Films);
 
         return filmInfos;
     }
@@ -289,14 +294,14 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
     @Override
     public List<FilmInfo> getExpectRanking() {
         // 条件 -> 即将上映的，预售前10名
-        EntityWrapper<MoocFilmT> entityWrapper = new EntityWrapper<>();
+        EntityWrapper<FilmT> entityWrapper = new EntityWrapper<>();
         entityWrapper.eq("film_status","2");
 
-        Page<MoocFilmT> page = new Page<>(1,10,"film_preSaleNum");
+        Page<FilmT> page = new Page<>(1,10,"film_preSaleNum");
 
-        List<MoocFilmT> moocFilms = moocFilmTMapper.selectPage(page,entityWrapper);
+        List<FilmT> Films = filmTMapper.selectPage(page,entityWrapper);
 
-        List<FilmInfo> filmInfos = getFilmInfos(moocFilms);
+        List<FilmInfo> filmInfos = getFilmInfos(Films);
 
         return filmInfos;
 
@@ -305,14 +310,14 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
     @Override
     public List<FilmInfo> getTop() {
         // 条件 -> 正在上映的，评分前10名
-        EntityWrapper<MoocFilmT> entityWrapper = new EntityWrapper<>();
+        EntityWrapper<FilmT> entityWrapper = new EntityWrapper<>();
         entityWrapper.eq("film_status","1");
 
-        Page<MoocFilmT> page = new Page<>(1,10,"film_score");
+        Page<FilmT> page = new Page<>(1,10,"film_score");
 
-        List<MoocFilmT> moocFilms = moocFilmTMapper.selectPage(page,entityWrapper);
+        List<FilmT> Films = filmTMapper.selectPage(page,entityWrapper);
 
-        List<FilmInfo> filmInfos = getFilmInfos(moocFilms);
+        List<FilmInfo> filmInfos = getFilmInfos(Films);
 
         return filmInfos;
     }
@@ -320,13 +325,13 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
     @Override
     public List<CatVO> getCats() {
         List<CatVO> cats = new ArrayList<>();
-        // 查询实体对象 - MoocCatDictT
-        List<MoocCatDictT> moocCats = moocCatDictTMapper.selectList(null);
+        // 查询实体对象 - CatDictT
+        List<CatDictT> Cats = CatDictTMapper.selectList(null);
         // 将实体对象转换为业务对象 - CatVO
-        for(MoocCatDictT moocCatDictT : moocCats){
+        for(CatDictT CatDictT : Cats){
             CatVO catVO = new CatVO();
-            catVO.setCatId(moocCatDictT.getUuid()+"");
-            catVO.setCatName(moocCatDictT.getShowName());
+            catVO.setCatId(CatDictT.getUuid()+"");
+            catVO.setCatName(CatDictT.getShowName());
 
             cats.add(catVO);
         }
@@ -337,12 +342,14 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
     @Override
     public List<SourceVO> getSources() {
         List<SourceVO> sources = new ArrayList<>();
-        List<MoocSourceDictT> moocSourceDicts = moocSourceDictTMapper.selectList(null);
-        for(MoocSourceDictT moocSourceDictT : moocSourceDicts){
+        System.out.println("**********************************************************");
+        List<SourceDictT> SourceDicts = sourceDictTMapper.selectList(null);
+        System.out.println("**********************************************************");
+        for(SourceDictT SourceDictT : SourceDicts){
             SourceVO sourceVO = new SourceVO();
 
-            sourceVO.setSourceId(moocSourceDictT.getUuid()+"");
-            sourceVO.setSourceName(moocSourceDictT.getShowName());
+            sourceVO.setSourceId(SourceDictT.getUuid()+"");
+            sourceVO.setSourceName(SourceDictT.getShowName());
 
             sources.add(sourceVO);
         }
@@ -352,13 +359,13 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
     @Override
     public List<YearVO> getYears() {
         List<YearVO> years = new ArrayList<>();
-        // 查询实体对象 - MoocCatDictT
-        List<MoocYearDictT> moocYears = moocYearDictTMapper.selectList(null);
+        // 查询实体对象 - CatDictT
+        List<YearDictT> Years = YearDictTMapper.selectList(null);
         // 将实体对象转换为业务对象 - CatVO
-        for(MoocYearDictT moocYearDictT : moocYears){
+        for(YearDictT YearDictT : Years){
             YearVO yearVO = new YearVO();
-            yearVO.setYearId(moocYearDictT.getUuid()+"");
-            yearVO.setYearName(moocYearDictT.getShowName());
+            yearVO.setYearId(YearDictT.getUuid()+"");
+            yearVO.setYearName(YearDictT.getShowName());
 
             years.add(yearVO);
         }
@@ -370,31 +377,31 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
         FilmDetailVO filmDetailVO = null;
         // searchType 1-按名称  2-按ID的查找
         if(searchType == 1){
-            filmDetailVO = moocFilmTMapper.getFilmDetailByName("%"+searchParam+"%");
+            filmDetailVO = filmTMapper.getFilmDetailByName("%"+searchParam+"%");
         }else{
-            filmDetailVO = moocFilmTMapper.getFilmDetailById(searchParam);
+            filmDetailVO = filmTMapper.getFilmDetailById(searchParam);
         }
 
         return filmDetailVO;
     }
 
-    private MoocFilmInfoT getFilmInfo(String filmId){
+    private FilmInfoT getFilmInfo(String filmId){
 
-        MoocFilmInfoT moocFilmInfoT = new MoocFilmInfoT();
-        moocFilmInfoT.setFilmId(filmId);
+        FilmInfoT filmInfoT = new FilmInfoT();
+        filmInfoT.setFilmId(filmId);
 
-        moocFilmInfoT = moocFilmInfoTMapper.selectOne(moocFilmInfoT);
+        filmInfoT = FilmInfoTMapper.selectOne(filmInfoT);
 
-        return moocFilmInfoT;
+        return filmInfoT;
     }
 
     @Override
     public FilmDescVO getFilmDesc(String filmId) {
 
-        MoocFilmInfoT moocFilmInfoT = getFilmInfo(filmId);
+        FilmInfoT FilmInfoT = getFilmInfo(filmId);
 
         FilmDescVO filmDescVO = new FilmDescVO();
-        filmDescVO.setBiography(moocFilmInfoT.getBiography());
+        filmDescVO.setBiography(FilmInfoT.getBiography());
         filmDescVO.setFilmId(filmId);
 
         return filmDescVO;
@@ -403,9 +410,9 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
     @Override
     public ImgVO getImgs(String filmId) {
 
-        MoocFilmInfoT moocFilmInfoT = getFilmInfo(filmId);
+        FilmInfoT FilmInfoT = getFilmInfo(filmId);
         // 图片地址是五个以逗号为分隔的链接URL
-        String filmImgStr = moocFilmInfoT.getFilmImgs();
+        String filmImgStr = FilmInfoT.getFilmImgs();
         String[] filmImgs = filmImgStr.split(",");
 
         ImgVO imgVO = new ImgVO();
@@ -421,16 +428,16 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
     @Override
     public ActorVO getDectInfo(String filmId) {
 
-        MoocFilmInfoT moocFilmInfoT = getFilmInfo(filmId);
+        FilmInfoT FilmInfoT = getFilmInfo(filmId);
 
         // 获取导演编号
-        Integer directId = moocFilmInfoT.getDirectorId();
+        Integer directId = FilmInfoT.getDirectorId();
 
-        MoocActorT moocActorT = moocActorTMapper.selectById(directId);
+        ActorT ActorT = ActorTMapper.selectById(directId);
 
         ActorVO actorVO = new ActorVO();
-        actorVO.setImgAddress(moocActorT.getActorImg());
-        actorVO.setDirectorName(moocActorT.getActorName());
+        actorVO.setImgAddress(ActorT.getActorImg());
+        actorVO.setDirectorName(ActorT.getActorName());
 
         return actorVO;
     }
@@ -438,7 +445,7 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
     @Override
     public List<ActorVO> getActors(String filmId) {
 
-        List<ActorVO> actors = moocActorTMapper.getActors(filmId);
+        List<ActorVO> actors = ActorTMapper.getActors(filmId);
 
         return actors;
     }

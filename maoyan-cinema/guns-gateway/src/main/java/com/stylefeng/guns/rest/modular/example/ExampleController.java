@@ -21,6 +21,7 @@ public class ExampleController {
     public ResponseEntity hello() {
         //System.out.println(simpleObject.getUser());
 
+        // userId -> key -> redis[userinfo] -> 30分钟
         System.out.println(CurrentUser.getCurrentUser());
 
         return ResponseEntity.ok("请求成功!");
