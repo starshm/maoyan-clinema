@@ -18,17 +18,17 @@ import java.util.List;
 public class DefaultCinemaServiceImpl implements CinemaServiceAPI {
 
     @Autowired
-    private MoocCinemaTMapper moocCinemaTMapper;
+    private CinemaTMapper CinemaTMapper;
     @Autowired
-    private MoocAreaDictTMapper moocAreaDictTMapper;
+    private AreaDictTMapper AreaDictTMapper;
     @Autowired
-    private MoocBrandDictTMapper moocBrandDictTMapper;
+    private BrandDictTMapper BrandDictTMapper;
     @Autowired
-    private MoocHallDictTMapper moocHallDictTMapper;
+    private HallDictTMapper HallDictTMapper;
     @Autowired
-    private MoocHallFilmInfoTMapper moocHallFilmInfoTMapper;
+    private HallFilmInfoTMapper HallFilmInfoTMapper;
     @Autowired
-    private MoocFieldTMapper moocFieldTMapper;
+    private FieldTMapper FieldTMapper;
 
 
     //1、根据CinemaQueryVO，查询影院列表
@@ -37,9 +37,9 @@ public class DefaultCinemaServiceImpl implements CinemaServiceAPI {
         // 业务实体集合
         List<CinemaVO> cinemas = new ArrayList<>();
 
-        Page<MoocCinemaT> page = new Page<>(cinemaQueryVO.getNowPage(),cinemaQueryVO.getPageSize());
+        Page<CinemaT> page = new Page<>(cinemaQueryVO.getNowPage(),cinemaQueryVO.getPageSize());
         // 判断是否传入查询条件 -> brandId,distId,hallType 是否==99
-        EntityWrapper<MoocCinemaT> entityWrapper = new EntityWrapper<>();
+        EntityWrapper<CinemaT> entityWrapper = new EntityWrapper<>();
         if(cinemaQueryVO.getBrandId() != 99){
             entityWrapper.eq("brand_id",cinemaQueryVO.getBrandId());
         }
@@ -51,20 +51,20 @@ public class DefaultCinemaServiceImpl implements CinemaServiceAPI {
         }
 
         // 将数据实体转换为业务实体
-        List<MoocCinemaT> moocCinemaTS = moocCinemaTMapper.selectPage(page, entityWrapper);
-        for(MoocCinemaT moocCinemaT : moocCinemaTS){
+        List<CinemaT> CinemaTS = CinemaTMapper.selectPage(page, entityWrapper);
+        for(CinemaT CinemaT : CinemaTS){
             CinemaVO cinemaVO = new CinemaVO();
 
-            cinemaVO.setUuid(moocCinemaT.getUuid()+"");
-            cinemaVO.setMinimumPrice(moocCinemaT.getMinimumPrice()+"");
-            cinemaVO.setCinemaName(moocCinemaT.getCinemaName());
-            cinemaVO.setAddress(moocCinemaT.getCinemaAddress());
+            cinemaVO.setUuid(CinemaT.getUuid()+"");
+            cinemaVO.setMinimumPrice(CinemaT.getMinimumPrice()+"");
+            cinemaVO.setCinemaName(CinemaT.getCinemaName());
+            cinemaVO.setAddress(CinemaT.getCinemaAddress());
 
             cinemas.add(cinemaVO);
         }
 
         // 根据条件，判断影院列表总数
-        long counts = moocCinemaTMapper.selectCount(entityWrapper);
+        long counts = CinemaTMapper.selectCount(entityWrapper);
 
         // 组织返回值对象
         Page<CinemaVO> result = new Page<>();
@@ -80,15 +80,15 @@ public class DefaultCinemaServiceImpl implements CinemaServiceAPI {
         boolean flag = false;
         List<BrandVO> brandVOS = new ArrayList<>();
         // 判断brandId是否存在
-        MoocBrandDictT moocBrandDictT = moocBrandDictTMapper.selectById(brandId);
+        BrandDictT BrandDictT = BrandDictTMapper.selectById(brandId);
         // 判断brandId 是否等于 99
-        if(brandId == 99 || moocBrandDictT==null || moocBrandDictT.getUuid() == null){
+        if(brandId == 99 || BrandDictT==null || BrandDictT.getUuid() == null){
             flag = true;
         }
         // 查询所有列表
-        List<MoocBrandDictT> moocBrandDictTS = moocBrandDictTMapper.selectList(null);
+        List<BrandDictT> BrandDictTS = BrandDictTMapper.selectList(null);
         // 判断flag如果为true，则将99置为isActive
-        for(MoocBrandDictT brand : moocBrandDictTS){
+        for(BrandDictT brand : BrandDictTS){
             BrandVO brandVO = new BrandVO();
             brandVO.setBrandName(brand.getShowName());
             brandVO.setBrandId(brand.getUuid()+"");
@@ -114,15 +114,15 @@ public class DefaultCinemaServiceImpl implements CinemaServiceAPI {
         boolean flag = false;
         List<AreaVO> areaVOS = new ArrayList<>();
         // 判断brandId是否存在
-        MoocAreaDictT moocAreaDictT = moocAreaDictTMapper.selectById(areaId);
+        AreaDictT AreaDictT = AreaDictTMapper.selectById(areaId);
         // 判断brandId 是否等于 99
-        if(areaId == 99 || moocAreaDictT==null || moocAreaDictT.getUuid() == null){
+        if(areaId == 99 || AreaDictT==null || AreaDictT.getUuid() == null){
             flag = true;
         }
         // 查询所有列表
-        List<MoocAreaDictT> moocAreaDictTS = moocAreaDictTMapper.selectList(null);
+        List<AreaDictT> AreaDictTS = AreaDictTMapper.selectList(null);
         // 判断flag如果为true，则将99置为isActive
-        for(MoocAreaDictT area : moocAreaDictTS){
+        for(AreaDictT area : AreaDictTS){
             AreaVO areaVO = new AreaVO();
             areaVO.setAreaName(area.getShowName());
             areaVO.setAreaId(area.getUuid()+"");
@@ -148,15 +148,15 @@ public class DefaultCinemaServiceImpl implements CinemaServiceAPI {
         boolean flag = false;
         List<HallTypeVO> hallTypeVOS = new ArrayList<>();
         // 判断brandId是否存在
-        MoocHallDictT moocHallDictT = moocHallDictTMapper.selectById(hallType);
+        HallDictT HallDictT = HallDictTMapper.selectById(hallType);
         // 判断brandId 是否等于 99
-        if(hallType == 99 || moocHallDictT==null || moocHallDictT.getUuid() == null){
+        if(hallType == 99 || HallDictT==null || HallDictT.getUuid() == null){
             flag = true;
         }
         // 查询所有列表
-        List<MoocHallDictT> moocHallDictTS = moocHallDictTMapper.selectList(null);
+        List<HallDictT> HallDictTS = HallDictTMapper.selectList(null);
         // 判断flag如果为true，则将99置为isActive
-        for(MoocHallDictT hall : moocHallDictTS){
+        for(HallDictT hall : HallDictTS){
             HallTypeVO hallTypeVO = new HallTypeVO();
             hallTypeVO.setHalltypeName(hall.getShowName());
             hallTypeVO.setHalltypeId(hall.getUuid()+"");
@@ -181,14 +181,14 @@ public class DefaultCinemaServiceImpl implements CinemaServiceAPI {
     public CinemaInfoVO getCinemaInfoById(int cinemaId){
 
         // 数据实体
-        MoocCinemaT moocCinemaT = moocCinemaTMapper.selectById(cinemaId);
+        CinemaT CinemaT = CinemaTMapper.selectById(cinemaId);
         // 将数据实体转换成业务实体
         CinemaInfoVO cinemaInfoVO = new CinemaInfoVO();
-        cinemaInfoVO.setCinemaAdress(moocCinemaT.getCinemaAddress());
-        cinemaInfoVO.setImgUrl(moocCinemaT.getImgAddress());
-        cinemaInfoVO.setCinemaPhone(moocCinemaT.getCinemaPhone());
-        cinemaInfoVO.setCinemaName(moocCinemaT.getCinemaName());
-        cinemaInfoVO.setCinemaId(moocCinemaT.getUuid()+"");
+        cinemaInfoVO.setCinemaAdress(CinemaT.getCinemaAddress());
+        cinemaInfoVO.setImgUrl(CinemaT.getImgAddress());
+        cinemaInfoVO.setCinemaPhone(CinemaT.getCinemaPhone());
+        cinemaInfoVO.setCinemaName(CinemaT.getCinemaName());
+        cinemaInfoVO.setCinemaId(CinemaT.getUuid()+"");
 
         return cinemaInfoVO;
     }
@@ -197,7 +197,7 @@ public class DefaultCinemaServiceImpl implements CinemaServiceAPI {
     @Override
     public List<FilmInfoVO> getFilmInfoByCinemaId(int cinemaId){
 
-        List<FilmInfoVO> filmInfos = moocFieldTMapper.getFilmInfos(cinemaId);
+        List<FilmInfoVO> filmInfos = FieldTMapper.getFilmInfos(cinemaId);
 
         return filmInfos;
     }
@@ -205,7 +205,7 @@ public class DefaultCinemaServiceImpl implements CinemaServiceAPI {
     @Override
     public HallInfoVO getFilmFieldInfo(int fieldId){
 
-        HallInfoVO hallInfoVO = moocFieldTMapper.getHallInfo(fieldId);
+        HallInfoVO hallInfoVO = FieldTMapper.getHallInfo(fieldId);
 
         return hallInfoVO;
     }
@@ -213,7 +213,7 @@ public class DefaultCinemaServiceImpl implements CinemaServiceAPI {
     @Override
     public FilmInfoVO getFilmInfoByFieldId(int fieldId){
 
-        FilmInfoVO filmInfoVO = moocFieldTMapper.getFilmInfoById(fieldId);
+        FilmInfoVO filmInfoVO = FieldTMapper.getFilmInfoById(fieldId);
 
         return filmInfoVO;
     }
@@ -223,10 +223,10 @@ public class DefaultCinemaServiceImpl implements CinemaServiceAPI {
 
         OrderQueryVO orderQueryVO = new OrderQueryVO();
 
-        MoocFieldT moocFieldT = moocFieldTMapper.selectById(fieldId);
+        FieldT FieldT = FieldTMapper.selectById(fieldId);
 
-        orderQueryVO.setCinemaId(moocFieldT.getCinemaId()+"");
-        orderQueryVO.setFilmPrice(moocFieldT.getPrice()+"");
+        orderQueryVO.setCinemaId(FieldT.getCinemaId()+"");
+        orderQueryVO.setFilmPrice(FieldT.getPrice()+"");
 
         return orderQueryVO;
     }

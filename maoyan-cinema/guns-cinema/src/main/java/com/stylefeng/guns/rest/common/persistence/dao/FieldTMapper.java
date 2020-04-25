@@ -1,9 +1,8 @@
 package com.stylefeng.guns.rest.common.persistence.dao;
 
-import com.stylefeng.guns.api.cinema.vo.FilmFieldVO;
 import com.stylefeng.guns.api.cinema.vo.FilmInfoVO;
 import com.stylefeng.guns.api.cinema.vo.HallInfoVO;
-import com.stylefeng.guns.rest.common.persistence.model.MoocFieldT;
+import com.stylefeng.guns.rest.common.persistence.model.FieldT;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,14 +14,13 @@ import java.util.List;
  * </p>
  *
  * @author jiangzh
- * @since 2018-09-15
+ * @since 2020-04-25
  */
-public interface MoocFieldTMapper extends BaseMapper<MoocFieldT> {
+public interface FieldTMapper extends BaseMapper<FieldT> {
 
-    List<FilmInfoVO> getFilmInfos(@Param("cinemaId") int cinemaId);
+    List<FilmInfoVO> getFilmInfos(@Param("cinemaId") Integer cinemaId);
 
-    HallInfoVO getHallInfo(@Param("fieldId") int fieldId);
+    HallInfoVO getHallInfo(@Param("fieldId") Integer fieldId);
 
     FilmInfoVO getFilmInfoById(@Param("fieldId") int fieldId);
-
 }

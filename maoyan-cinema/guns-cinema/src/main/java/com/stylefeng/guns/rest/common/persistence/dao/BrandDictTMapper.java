@@ -1,6 +1,6 @@
 package com.stylefeng.guns.rest.common.persistence.dao;
 
-import com.stylefeng.guns.rest.common.persistence.model.MoocBrandDictT;
+import com.stylefeng.guns.rest.common.persistence.model.BrandDictT;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**
@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * </p>
  *
  * @author jiangzh
- * @since 2018-09-15
+ * @since 2020-04-25
  */
-public interface MoocBrandDictTMapper extends BaseMapper<MoocBrandDictT> {
+public interface BrandDictTMapper extends BaseMapper<BrandDictT> {
 
 }

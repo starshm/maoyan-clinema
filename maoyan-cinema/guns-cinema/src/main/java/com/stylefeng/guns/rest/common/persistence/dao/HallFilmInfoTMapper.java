@@ -1,6 +1,6 @@
 package com.stylefeng.guns.rest.common.persistence.dao;
 
-import com.stylefeng.guns.rest.common.persistence.model.MoocHallFilmInfoT;
+import com.stylefeng.guns.rest.common.persistence.model.HallFilmInfoT;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**
@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * </p>
  *
  * @author jiangzh
- * @since 2018-09-15
+ * @since 2020-04-25
  */
-public interface MoocHallFilmInfoTMapper extends BaseMapper<MoocHallFilmInfoT> {
+public interface HallFilmInfoTMapper extends BaseMapper<HallFilmInfoT> {
 
 }

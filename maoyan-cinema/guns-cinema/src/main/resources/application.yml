@@ -35,9 +35,9 @@ spring:
     protocol:
       name: dubbo
       port: 20885
-      accepts: 10
+      accepts: 10  # 连接控制 限制服务器端接受的连接不能超过 10 个
   datasource:
-      url: jdbc:mysql://127.0.0.1:3306/guns_rest?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+      url: jdbc:mysql://101.133.138.114:3306/guns_rest?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
       username: root
       password: root
       filters: log4j,wall,mergeStat

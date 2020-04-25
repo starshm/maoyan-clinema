@@ -13,10 +13,10 @@ import java.io.Serializable;
  * </p>
  *
  * @author jiangzh
- * @since 2018-09-15
+ * @since 2020-04-25
  */
-@TableName("mooc_field_t")
-public class MoocFieldT extends Model<MoocFieldT> {
+@TableName("field_t")
+public class FieldT extends Model<FieldT> {
 
     private static final long serialVersionUID = 1L;
 
@@ -132,7 +132,7 @@ public class MoocFieldT extends Model<MoocFieldT> {
 
     @Override
     public String toString() {
-        return "MoocFieldT{" +
+        return "FieldT{" +
         "uuid=" + uuid +
         ", cinemaId=" + cinemaId +
         ", filmId=" + filmId +

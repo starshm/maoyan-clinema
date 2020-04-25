@@ -1,6 +1,6 @@
 package com.stylefeng.guns.rest.common.persistence.dao;
 
-import com.stylefeng.guns.rest.common.persistence.model.MoocAreaDictT;
+import com.stylefeng.guns.rest.common.persistence.model.HallDictT;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**
@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * </p>
  *
  * @author jiangzh
- * @since 2018-09-15
+ * @since 2020-04-25
  */
-public interface MoocAreaDictTMapper extends BaseMapper<MoocAreaDictT> {
+public interface HallDictTMapper extends BaseMapper<HallDictT> {
 
 }

@@ -13,10 +13,10 @@ import java.io.Serializable;
  * </p>
  *
  * @author jiangzh
- * @since 2018-09-15
+ * @since 2020-04-25
  */
-@TableName("mooc_hall_dict_t")
-public class MoocHallDictT extends Model<MoocHallDictT> {
+@TableName("hall_dict_t")
+public class HallDictT extends Model<HallDictT> {
 
     private static final long serialVersionUID = 1L;
 
@@ -68,7 +68,7 @@ public class MoocHallDictT extends Model<MoocHallDictT> {
 
     @Override
     public String toString() {
-        return "MoocHallDictT{" +
+        return "HallDictT{" +
         "uuid=" + uuid +
         ", showName=" + showName +
         ", seatAddress=" + seatAddress +

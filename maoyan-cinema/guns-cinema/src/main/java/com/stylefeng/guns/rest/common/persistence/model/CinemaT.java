@@ -13,10 +13,10 @@ import java.io.Serializable;
  * </p>
  *
  * @author jiangzh
- * @since 2018-09-15
+ * @since 2020-04-25
  */
-@TableName("mooc_cinema_t")
-public class MoocCinemaT extends Model<MoocCinemaT> {
+@TableName("cinema_t")
+public class CinemaT extends Model<CinemaT> {
 
     private static final long serialVersionUID = 1L;
 
@@ -146,7 +146,7 @@ public class MoocCinemaT extends Model<MoocCinemaT> {
 
     @Override
     public String toString() {
-        return "MoocCinemaT{" +
+        return "CinemaT{" +
         "uuid=" + uuid +
         ", cinemaName=" + cinemaName +
         ", cinemaPhone=" + cinemaPhone +
