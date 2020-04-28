@@ -3,7 +3,6 @@ package com.stylefeng.guns.rest.common.persistence.model;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
-import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
 
@@ -12,18 +11,18 @@ import java.io.Serializable;
  * 订单信息表
  * </p>
  *
- * @author jiangzh
- * @since 2018-09-24
+ * @author minghai
+ * @since 2020-04-27
  */
-@TableName("mooc_order_2018_t")
-public class MoocOrder2018T extends Model<MoocOrder2018T> {
+@TableName("order_2021_t")
+public class Order2021T extends Model<Order2021T> {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * 主键编号
      */
-    @TableId("UUID")
+    @TableField("UUID")
     private String uuid;
     /**
      * 影院编号
@@ -172,7 +171,7 @@ public class MoocOrder2018T extends Model<MoocOrder2018T> {
 
     @Override
     public String toString() {
-        return "MoocOrder2018T{" +
+        return "Order2021T{" +
         "uuid=" + uuid +
         ", cinemaId=" + cinemaId +
         ", fieldId=" + fieldId +

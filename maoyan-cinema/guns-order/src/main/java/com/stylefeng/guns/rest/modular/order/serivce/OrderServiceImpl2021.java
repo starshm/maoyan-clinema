@@ -11,11 +11,8 @@ import com.stylefeng.guns.api.cinema.vo.OrderQueryVO;
 import com.stylefeng.guns.api.order.OrderServiceAPI;
 import com.stylefeng.guns.api.order.vo.OrderVO;
 import com.stylefeng.guns.core.util.UUIDUtil;
-import com.stylefeng.guns.rest.common.persistence.dao.MoocOrder2017TMapper;
-import com.stylefeng.guns.rest.common.persistence.dao.MoocOrderTMapper;
-import com.stylefeng.guns.rest.common.persistence.model.MoocOrder2017T;
-import com.stylefeng.guns.rest.common.persistence.model.MoocOrder2018T;
-import com.stylefeng.guns.rest.common.persistence.model.MoocOrderT;
+import com.stylefeng.guns.rest.common.persistence.dao.Order2021TMapper;
+import com.stylefeng.guns.rest.common.persistence.model.Order2021T;
 import com.stylefeng.guns.rest.common.util.FTPUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +26,12 @@ import java.util.List;
 
 @Slf4j
 @Component
-@Service(interfaceClass = OrderServiceAPI.class,group = "order2017")
-public class OrderServiceImpl2017 implements OrderServiceAPI {
+@Service(interfaceClass = OrderServiceAPI.class,group = "order2021")
+public class OrderServiceImpl2021 implements OrderServiceAPI {
+
 
     @Autowired
-    private MoocOrder2017TMapper moocOrder2017TMapper;
+    private Order2021TMapper OrderTMapper2017;
 
     @Reference(interfaceClass = CinemaServiceAPI.class,check = false)
     private CinemaServiceAPI cinemaServiceAPI;
@@ -45,7 +43,7 @@ public class OrderServiceImpl2017 implements OrderServiceAPI {
     @Override
     public boolean isTrueSeats(String fieldId, String seats) {
         // 根据FieldId找到对应的座位位置图
-        String seatPath = moocOrder2017TMapper.getSeatsByFieldId(fieldId);
+        String seatPath = OrderTMapper2017.getSeatsByFieldId(fieldId);
 
         // 读取位置图，判断seats是否为真
         String fileStrByAddress = ftpUtil.getFileStrByAddress(seatPath);
@@ -82,11 +80,11 @@ public class OrderServiceImpl2017 implements OrderServiceAPI {
         EntityWrapper entityWrapper = new EntityWrapper();
         entityWrapper.eq("field_id",fieldId);
 
-        List<MoocOrder2017T> list = moocOrder2017TMapper.selectList(entityWrapper);
+        List<Order2021T> list = OrderTMapper2017.selectList(entityWrapper);
         String[] seatArrs = seats.split(",");
         // 有任何一个编号匹配上，则直接返回失败
-        for(MoocOrder2017T moocOrderT : list){
-            String[] ids = moocOrderT.getSeatsIds().split(",");
+        for(Order2021T OrderT : list){
+            String[] ids = OrderT.getSeatsIds().split(",");
             for(String id : ids){
                 for(String seat : seatArrs){
                     if(id.equalsIgnoreCase(seat)){
@@ -119,21 +117,21 @@ public class OrderServiceImpl2017 implements OrderServiceAPI {
         int solds = soldSeats.split(",").length;
         double totalPrice = getTotalPrice(solds,filmPrice);
 
-        MoocOrder2017T moocOrderT = new MoocOrder2017T();
-        moocOrderT.setUuid(uuid);
-        moocOrderT.setSeatsName(seatsName);
-        moocOrderT.setSeatsIds(soldSeats);
-        moocOrderT.setOrderUser(userId);
-        moocOrderT.setOrderPrice(totalPrice);
-        moocOrderT.setFilmPrice(filmPrice);
-        moocOrderT.setFilmId(filmId);
-        moocOrderT.setFieldId(fieldId);
-        moocOrderT.setCinemaId(cinemaId);
+        Order2021T order2021T = new Order2021T();
+        order2021T.setUuid(uuid);
+        order2021T.setSeatsName(seatsName);
+        order2021T.setSeatsIds(soldSeats);
+        order2021T.setOrderUser(userId);
+        order2021T.setOrderPrice(totalPrice);
+        order2021T.setFilmPrice(filmPrice);
+        order2021T.setFilmId(filmId);
+        order2021T.setFieldId(fieldId);
+        order2021T.setCinemaId(cinemaId);
 
-        Integer insert = moocOrder2017TMapper.insert(moocOrderT);
+        Integer insert = OrderTMapper2017.insert(order2021T);
         if(insert>0){
             // 返回查询结果
-            OrderVO orderVO = moocOrder2017TMapper.getOrderInfoById(uuid);
+            OrderVO orderVO = OrderTMapper2017.getOrderInfoById(uuid);
             if(orderVO == null || orderVO.getOrderId() == null){
                 log.error("订单信息查询失败,订单编号为{}",uuid);
                 return null;
@@ -167,16 +165,16 @@ public class OrderServiceImpl2017 implements OrderServiceAPI {
             log.error("订单查询业务失败，用户编号未传入");
             return null;
         }else{
-            List<OrderVO> ordersByUserId = moocOrder2017TMapper.getOrdersByUserId(userId,page);
+            List<OrderVO> ordersByUserId = OrderTMapper2017.getOrdersByUserId(userId,page);
             if(ordersByUserId==null && ordersByUserId.size()==0){
                 result.setTotal(0);
                 result.setRecords(new ArrayList<>());
                 return result;
             }else{
                 // 获取订单总数
-                EntityWrapper<MoocOrder2017T> entityWrapper = new EntityWrapper<>();
+                EntityWrapper<Order2021T> entityWrapper = new EntityWrapper<>();
                 entityWrapper.eq("order_user",userId);
-                Integer counts = moocOrder2017TMapper.selectCount(entityWrapper);
+                Integer counts = OrderTMapper2017.selectCount(entityWrapper);
                 // 将结果放入Page
                 result.setTotal(counts);
                 result.setRecords(ordersByUserId);
@@ -199,7 +197,7 @@ public class OrderServiceImpl2017 implements OrderServiceAPI {
             log.error("查询已售座位错误，未传入任何场次编号");
             return "";
         }else{
-            String soldSeatsByFieldId = moocOrder2017TMapper.getSoldSeatsByFieldId(fieldId);
+            String soldSeatsByFieldId = OrderTMapper2017.getSoldSeatsByFieldId(fieldId);
             return soldSeatsByFieldId;
         }
     }
@@ -207,18 +205,18 @@ public class OrderServiceImpl2017 implements OrderServiceAPI {
     @Override
     public OrderVO getOrderInfoById(String orderId) {
 
-        OrderVO orderInfoById = moocOrder2017TMapper.getOrderInfoById(orderId);
+        OrderVO orderInfoById = OrderTMapper2017.getOrderInfoById(orderId);
 
         return orderInfoById;
     }
 
     @Override
     public boolean paySuccess(String orderId) {
-        MoocOrder2017T moocOrderT = new MoocOrder2017T();
-        moocOrderT.setUuid(orderId);
-        moocOrderT.setOrderStatus(1);
+        Order2021T order2021T = new Order2021T();
+        order2021T.setUuid(orderId);
+        order2021T.setOrderStatus(1);
 
-        Integer integer = moocOrder2017TMapper.updateById(moocOrderT);
+        Integer integer = OrderTMapper2017.updateById(order2021T);
         if(integer>=1){
             return true;
         }else{
@@ -228,11 +226,11 @@ public class OrderServiceImpl2017 implements OrderServiceAPI {
 
     @Override
     public boolean payFail(String orderId) {
-        MoocOrder2017T moocOrderT = new MoocOrder2017T();
-        moocOrderT.setUuid(orderId);
-        moocOrderT.setOrderStatus(2);
+        Order2021T order2021T = new Order2021T();
+        order2021T.setUuid(orderId);
+        order2021T.setOrderStatus(2);
 
-        Integer integer = moocOrder2017TMapper.updateById(moocOrderT);
+        Integer integer = OrderTMapper2017.updateById(order2021T);
         if(integer>=1){
             return true;
         }else{

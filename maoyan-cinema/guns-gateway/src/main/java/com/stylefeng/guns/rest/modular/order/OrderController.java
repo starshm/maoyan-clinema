@@ -32,15 +32,15 @@ public class OrderController {
     @Reference(
             interfaceClass = OrderServiceAPI.class,
             check = false,
-            group = "order2018")
+            group = "order2020")
     private OrderServiceAPI orderServiceAPI;
 
 
     @Reference(
             interfaceClass = OrderServiceAPI.class,
             check = false,
-            group = "order2017")
-    private OrderServiceAPI orderServiceAPI2017;
+            group = "order2021")
+    private OrderServiceAPI orderServiceAPI2021;
 
     @Reference(interfaceClass = AliPayServiceAPI.class,check = false)
     private AliPayServiceAPI aliPayServiceAPI;
@@ -107,24 +107,27 @@ public class OrderController {
             @RequestParam(name = "pageSize",required = false,defaultValue = "5")Integer pageSize
     ){
 
+
         // 获取当前登陆人的信息
         String userId = CurrentUser.getCurrentUser();
+
+        log.error("用户ID {}",userId);
 
         // 使用当前登陆人获取已经购买的订单
         Page<OrderVO> page = new Page<>(nowPage,pageSize);
         if(userId != null && userId.trim().length()>0){
             Page<OrderVO> result = orderServiceAPI.getOrderByUserId(Integer.parseInt(userId), page);
 
-            Page<OrderVO> result2017 = orderServiceAPI2017.getOrderByUserId(Integer.parseInt(userId), page);
+            Page<OrderVO> result2021 = orderServiceAPI2021.getOrderByUserId(Integer.parseInt(userId), page);
 
-            log.error(result2017.getRecords()+" , "+result.getRecords());
+            //log.error(result2021.getRecords()+" , "+result.getRecords());
 
             // 合并结果
-            int totalPages = (int)(result.getPages() + result2017.getPages());
-            // 2017和2018的订单总数合并
+            int totalPages = (int)(result.getPages() + result2021.getPages());
+            // 2020和2021的订单总数合并
             List<OrderVO> orderVOList = new ArrayList<>();
             orderVOList.addAll(result.getRecords());
-            orderVOList.addAll(result2017.getRecords());
+            orderVOList.addAll(result2021.getRecords());
 
             return ResponseVO.success(nowPage,totalPages,"",orderVOList);
 

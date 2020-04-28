@@ -11,11 +11,11 @@ import java.io.Serializable;
  * 订单信息表
  * </p>
  *
- * @author jiangzh
- * @since 2018-09-20
+ * @author minghai
+ * @since 2020-04-27
  */
-@TableName("mooc_order_t")
-public class MoocOrderT extends Model<MoocOrderT> {
+@TableName("order_2020_t")
+public class Order2020T extends Model<Order2020T> {
 
     private static final long serialVersionUID = 1L;
 
@@ -171,7 +171,7 @@ public class MoocOrderT extends Model<MoocOrderT> {
 
     @Override
     public String toString() {
-        return "MoocOrderT{" +
+        return "Order2020T{" +
         "uuid=" + uuid +
         ", cinemaId=" + cinemaId +
         ", fieldId=" + fieldId +

@@ -59,7 +59,7 @@ public class FTPUtil {
             ftpClient.logout();
             return stringBuffer.toString();
         }catch (Exception e){
-            log.error("获取文件信息失败",e);
+            log.error("获取文件失败",e);
         }finally {
             try {
                 bufferedReader.close();
