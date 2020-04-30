@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/user/")
 @RestController
-@CrossOrigin(origins = "*",maxAge = 3600)
+@CrossOrigin(origins = "*",maxAge = 3600,
+        allowedHeaders = {
+
+        })
 public class UserController {
 
     @Reference(interfaceClass = UserAPI.class,check = false)

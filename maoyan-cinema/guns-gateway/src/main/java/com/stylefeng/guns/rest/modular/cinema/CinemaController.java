@@ -28,7 +28,7 @@ public class CinemaController {
                     connections = 10,cache = "lru",check = false)
     private CinemaServiceAPI cinemaServiceAPI;
 
-    @Reference(interfaceClass = OrderServiceAPI.class,check = false)
+    @Reference(interfaceClass = OrderServiceAPI.class,check = false,group = "order2020")
     private OrderServiceAPI orderServiceAPI;
 
     private static final String IMG_PRE = "http://img.meetingshop.cn/";
