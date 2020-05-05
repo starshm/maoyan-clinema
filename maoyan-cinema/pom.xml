@@ -21,6 +21,7 @@
         <module>guns-order</module>
         <module>guns-alipay</module>
         <module>guns-show</module>
+        <module>meeting-show-admin</module>
     </modules>
 
     <parent>
