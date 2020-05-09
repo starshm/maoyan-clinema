@@ -43,7 +43,7 @@ public class CommController {
 
 
         System.out.println(fileName);
-        String filePath = "E:\\Environment\\product\\cinema\\";
+        String filePath = "E:\\Environment\\product\\"+uploadType+"\\";
         File myfile = new File(filePath + fileName);
         System.out.println(myfile.getAbsoluteFile());
 

@@ -105,4 +105,20 @@ public class CinemaServiceImpl implements ICinemaService {
         }
     }
 
+    @Override
+    public Integer selectCount(String cinemaName, Integer brand, Integer area) {
+        EntityWrapper<CinemaT> entityWrapper = new EntityWrapper<>();
+        if(!StringUtils.isEmpty(cinemaName)){
+            entityWrapper.like("cinema_name",cinemaName);
+        }
+        if(brand != null && brand != 0 && brand != 99){
+            entityWrapper.eq("brand_id",brand);
+        }
+        if(area!= null && area != 0 && area != 99){
+            entityWrapper.eq("area_id",area);
+        }
+        Integer count = cinemaTMapper.selectCount(entityWrapper);
+        return count;
+    }
+
 }

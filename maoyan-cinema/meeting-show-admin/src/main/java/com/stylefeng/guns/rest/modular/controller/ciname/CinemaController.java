@@ -52,7 +52,7 @@ public class CinemaController {
         cinemaResponseVo.setAllCinemas(allCinemas);
 
         // 总页数
-        Integer total = cinemaService.selectCount();
+        Integer total = cinemaService.selectCount(cinemaName, brand, area);
 
         return ResponseVO.success(IMGPRE,total,cinemaResponseVo);
 

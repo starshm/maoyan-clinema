@@ -17,8 +17,9 @@ import lombok.Data;
 public class RequestVo {
     private String filmName;
     private Integer filmCat;
-    private Integer filmArea;
-    private String filmDate;
+    private Integer filmSource;
+    private Integer filmDate;
     private Integer nowPage;
     private Integer pageSize;
+    private Integer filmStatu;
 }

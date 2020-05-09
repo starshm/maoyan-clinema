@@ -25,4 +25,6 @@ public interface ICinemaService {
     public Integer deleteCinemaById(Integer uuid);
 
     public int saveOrUpdate(CinemaT cinemaT);
+
+    Integer selectCount(String cinemaName, Integer brand, Integer area);
 }

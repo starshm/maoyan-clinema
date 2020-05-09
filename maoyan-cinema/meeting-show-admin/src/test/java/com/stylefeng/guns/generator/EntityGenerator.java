@@ -62,7 +62,10 @@ public class EntityGenerator {
 //        strategy.setInclude(new String[]{"user_t"});
 //        strategy.setInclude(new String[]{"area_dict_t","brand_dict_t"});
 //        strategy.setInclude(new String[]{"cinema_t","hall_dict_t"});
-        strategy.setInclude(new String[]{"year_dict_t","source_dict_t","cat_dict_t"});
+//        strategy.setInclude(new String[]{"year_dict_t","source_dict_t","cat_dict_t"});
+//        strategy.setInclude(new String[]{"film_t","film_info_t","actor_t"});
+//        strategy.setInclude(new String[]{"film_actor_t"});
+        strategy.setInclude(new String[]{"field_t","hall_film_info_t"});
         mpg.setStrategy(strategy);
 
         // 包配置

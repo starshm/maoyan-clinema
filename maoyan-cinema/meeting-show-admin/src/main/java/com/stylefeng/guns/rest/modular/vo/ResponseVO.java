@@ -83,7 +83,7 @@ public class ResponseVO<M> {
         responseVO.setData(list);
         return responseVO;
     }
-    public static ResponseVO success(int total, List<UserT> list) {
+    public static <T> ResponseVO success(int total, List<T> list) {
         ResponseVO responseVO = new ResponseVO();
         responseVO.setTotal(total);
         responseVO.setData(list);
