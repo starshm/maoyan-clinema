@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stylefeng.guns.rest.common.persistence.dao.ShowFieldTMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.stylefeng.guns.rest.common.persistence.model.ShowFieldT">
+        <id column="UUID" property="uuid" />
+        <result column="theater_id" property="theaterId" />
+        <result column="show_id" property="showId" />
+        <result column="begin_time" property="beginTime" />
+        <result column="end_time" property="endTime" />
+        <result column="min_price" property="minPrice" />
+        <result column="max_price" property="maxPrice" />
+    </resultMap>
+
+
+    <select id="selectTotal" resultType="integer">
+        select count(*)
+        from show_field_t sf, theater_t t
+        where sf.theater_id = t.UUID
+        <if test="theaterName != null and theaterName != ''">
+            AND t.theater_name LIKE CONCAT("%",#{theaterName},"%")
+        </if>
+    </select>
+
+    <select id="findAllShowHall"
+            resultType="com.stylefeng.guns.rest.modular.controller.showHall.vo.ShowHallVo">
+        SELECT
+            sf.UUID AS UUID,
+            t.theater_name AS theaterName,
+            s.show_name AS showName,
+            sf.begin_time AS beginTime,
+            sf.end_time AS endTime,
+            sf.min_price AS minPrice,
+            sf.max_price AS maxPrice
+        FROM show_field_t sf, theater_t t, show_t s
+        WHERE sf.theater_id = t.UUID AND sf.show_id = s.UUID
+        <if test="theaterName != null and theaterName != ''">
+            AND t.theater_name LIKE CONCAT('%',#{theaterName},'%')
+        </if>
+        LIMIT #{nowPage},#{pageSize,jdbcType=INTEGER}
+    </select>
+
+</mapper>

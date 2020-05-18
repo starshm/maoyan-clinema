@@ -151,6 +151,11 @@ public class FilmServiceImpl implements IFilmService {
         return true;
     }
 
+    @Override
+    public Integer deleteByid(Integer uuid) {
+        return filmTMapper.deleteById(uuid);
+    }
+
 
     private List<FilmVO> filmTListToFilmVoList(List<FilmT> filmTS){
         List<FilmVO> filmVOS = new ArrayList<>();

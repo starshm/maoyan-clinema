@@ -14,5 +14,32 @@
         <result column="price" property="price" />
     </resultMap>
 
+    <resultMap id="fieldMap" type="com.stylefeng.guns.rest.modular.controller.hall.vo.ResponseHallsVo">
+        <result column="uuid" property="uuid"/>
+        <result column="cinemaName" property="cinemaName"/>
+        <result column="filmName" property="filmName"/>
+        <result column="beginTime" property="beginTime"/>
+        <result column="endTime" property="endTime"/>
+        <result column="hallType" property="hallType"/>
+        <result column="hallName" property="hallName"/>
+        <result column="price" property="price"/>
+    </resultMap>
 
+    <select id="selectHallPage" resultMap="fieldMap">
+        SELECT
+            field.UUID as uuid,
+            field.hall_name as hallName,
+            field.price as price,
+            field.begin_time as beginTime,
+            field.end_time as endTime,
+            hall.show_name as hallType,
+            f.film_name as filmName,
+            c.cinema_name as cinemaName
+        FROM field_t field,hall_dict_t hall,film_t f,cinema_t c
+        WHERE field.hall_id = hall.UUID AND field.film_id = f.UUID AND field.cinema_id = c.UUID
+        <if test="hallName != null">
+            AND hall_name LIKE CONCAT("%",#{hallName},"%")
+        </if>
+        LIMIT #{nowPage},#{pageSize}
+    </select>
 </mapper>

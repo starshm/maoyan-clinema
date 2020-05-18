@@ -13,7 +13,7 @@ import java.util.List;
  * @date 2020/5/7
  */
 public interface IHallService {
-    public List<ResponseHallsVo> findAllHalls(String hallNams, Integer nowPage, Integer pageSize, Integer count);
+    public List<ResponseHallsVo> findAllHalls(String hallNams, Integer nowPage, Integer pageSize);
     public Integer selectCount(String hallNams);
 
 

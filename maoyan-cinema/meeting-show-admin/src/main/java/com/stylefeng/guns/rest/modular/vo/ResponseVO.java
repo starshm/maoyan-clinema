@@ -51,6 +51,23 @@ public class ResponseVO<M> {
 
         return responseVO;
     }
+    public static<M> ResponseVO success(Integer count,M m){
+        ResponseVO responseVO = new ResponseVO();
+        responseVO.setStatus(0);
+        responseVO.setData(m);
+        responseVO.setTotal(count);
+
+        return responseVO;
+    }
+    public static<M> ResponseVO success(String imgPre,Integer count,M m){
+        ResponseVO responseVO = new ResponseVO();
+        responseVO.setStatus(0);
+        responseVO.setData(m);
+        responseVO.setTotal(count);
+        responseVO.setImgPre(imgPre);
+
+        return responseVO;
+    }
 
     public static<M> ResponseVO success(String msg){
         ResponseVO responseVO = new ResponseVO();

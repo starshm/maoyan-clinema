@@ -34,14 +34,13 @@ public class HallController {
         System.out.println(hallName + "  " + nowPage + "  " + pageSize);
 
         Integer count = hallService.selectCount(hallName);
-        List<ResponseHallsVo> allHalls = hallService.findAllHalls(hallName, nowPage, pageSize, count);
+        List<ResponseHallsVo> allHalls = hallService.findAllHalls(hallName, nowPage, pageSize);
 
         return ResponseVO.success(count,allHalls);
     }
 
     @GetMapping("/getAllCinemaFilmHall")
     public ResponseVO findAllCinemaFilmHall(){
-        ResponseCinemaFilmHall responseCinemaFilmHall = new ResponseCinemaFilmHall();
         ResponseCinemaFilmHall result = hallService.findAllCinemaFilmHall();
         return ResponseVO.success(result);
     }

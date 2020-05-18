@@ -25,4 +25,6 @@ public interface IFilmService {
     Integer saveFilmInfo(FilmInfoT filmInfoT);
 
     boolean saveFilmActor(List<FilmActorT> list);
+
+    Integer deleteByid(Integer uuid);
 }

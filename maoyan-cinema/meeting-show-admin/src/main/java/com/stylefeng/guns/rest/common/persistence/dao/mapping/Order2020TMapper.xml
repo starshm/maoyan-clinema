@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stylefeng.guns.rest.common.persistence.dao.Order2020TMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.stylefeng.guns.rest.common.persistence.model.Order2020T">
+        <result column="UUID" property="uuid"/>
+        <result column="cinema_id" property="cinemaId"/>
+        <result column="field_id" property="fieldId"/>
+        <result column="film_id" property="filmId"/>
+        <result column="seats_ids" property="seatsIds"/>
+        <result column="seats_name" property="seatsName"/>
+        <result column="film_price" property="filmPrice"/>
+        <result column="order_price" property="orderPrice"/>
+        <result column="order_time" property="orderTime"/>
+        <result column="order_user" property="orderUser"/>
+        <result column="order_status" property="orderStatus"/>
+    </resultMap>
+
+    <!-- 返回filmOrderVo   -->
+    <resultMap id="filmOrderVo" type="com.stylefeng.guns.rest.modular.controller.order.vo.FilmOrderVo">
+        <result column="uuid" property="uuid"/>
+        <result column="userName" property="userName"/>
+        <result column="orderTime" property="orderTime"/>
+        <result column="filmName" property="filmName"/>
+        <result column="cinemaName" property="cinemaName"/>
+        <result column="filmPrice" property="filmPrice"/>
+        <result column="orderPrice" property="orderPrice"/>
+        <result column="orderStatus" property="orderStatus"/>
+    </resultMap>
+
+    <select id="selectAllOrder" resultMap="filmOrderVo"
+            parameterType="com.stylefeng.guns.rest.modular.controller.order.vo.ReqeustOrderVO">
+        SELECT
+            o.UUID as uuid,
+            o.order_time as orderTime,
+            o.order_price as orderPrice,
+            o.order_status as orderStatus,
+            u.user_name as userName,
+            c.cinema_name as cinemaName,
+            film.film_name as filmName,
+            field.price as filmPrice
+        FROM order_2020_t o,user_t u,cinema_t c,film_t film,field_t field
+        WHERE o.order_user = u.UUID AND o.cinema_id = c.UUID AND film.UUID = o.film_id
+        AND o.field_id = field.UUID
+        <if test="orderId != null">
+            AND o.uuid = #{orderId}
+        </if>
+        LIMIT #{nowPage},#{pageSize}
+    </select>
+
+
+</mapper>

@@ -1,8 +1,5 @@
 package com.stylefeng.guns.rest.modular.controller.hall.vo;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.enums.IdType;
 import lombok.Data;
 
 /**

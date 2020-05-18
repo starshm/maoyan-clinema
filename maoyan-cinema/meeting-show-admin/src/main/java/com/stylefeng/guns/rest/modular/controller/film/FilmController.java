@@ -100,6 +100,16 @@ public class FilmController {
         return ResponseVO.serviceFail("添加失败");
     }
 
+    @GetMapping("/deleteFilm")
+    public ResponseVO deleteFilm(@RequestParam("uuid") Integer uuid){
+        Integer count = filmService.deleteByid(uuid);
+        if(count == 1){
+            return ResponseVO.success("删除成功");
+        }else{
+            return ResponseVO.serviceFail("删除失败");
+        }
+    }
+
     private FilmInfoT getFilmInfoTFromRequestVo(RequestVOAddFilm requestVOAddFilm,Integer filmId) {
         FilmInfoT filmInfoT = new FilmInfoT();
         filmInfoT.setFilmId(filmId+"");

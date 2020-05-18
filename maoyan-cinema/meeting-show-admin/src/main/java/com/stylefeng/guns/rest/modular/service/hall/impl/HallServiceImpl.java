@@ -48,47 +48,17 @@ public class HallServiceImpl implements IHallService {
     HallFilmInfoTMapper hallFilmInfoTMapper;
 
     @Override
-    public List<ResponseHallsVo> findAllHalls(String hallNams, Integer nowPage, Integer pageSize, Integer count) {
-        EntityWrapper<FieldT> entityWrapper = new EntityWrapper<>();
-        if(!StringUtils.isEmpty(hallNams)){
-            entityWrapper.like("hall_name",hallNams);
+    public List<ResponseHallsVo> findAllHalls(String hallNams, Integer nowPage, Integer pageSize) {
+        if(StringUtils.isEmpty(hallNams)){
+            hallNams = null;
         }
-        Page<FieldT> page = new Page<>();
-        page.setTotal(count);
-        page.setSize(pageSize);
-        page.setCurrent(nowPage);
-
-        List<FieldT> fieldTS = fieldTMapper.selectPage(page, entityWrapper);
-
-        List<ResponseHallsVo> voList = getResponseHallsVO(fieldTS);
+        nowPage = (nowPage -1) * pageSize;
+        List<ResponseHallsVo> responseHallsVo = fieldTMapper.selectHallPage(hallNams,nowPage,pageSize);
+        return responseHallsVo;
 
 
-        return voList;
     }
 
-    private List<ResponseHallsVo> getResponseHallsVO(List<FieldT> fieldTS) {
-        List<ResponseHallsVo> list = new ArrayList<>();
-        for (FieldT fieldT : fieldTS) {
-            ResponseHallsVo responseHallsVo = new ResponseHallsVo();
-            responseHallsVo.setUuid(fieldT.getUuid());
-            responseHallsVo.setHallName(fieldT.getHallName());
-            responseHallsVo.setPrice(fieldT.getPrice());
-            responseHallsVo.setBeginTime(fieldT.getBeginTime());
-            responseHallsVo.setEndTime(fieldT.getEndTime());
-
-            CinemaT cinemaT = cinemaTMapper.selectById(fieldT.getCinemaId());
-            responseHallsVo.setCinemaName(cinemaT.getCinemaName());
-
-            FilmT filmT = filmTMapper.selectById(fieldT.getFilmId());
-            responseHallsVo.setFilmName(filmT.getFilmName());
-
-            HallDictT hallDictT = hallDictTMapper.selectById(fieldT.getHallId());
-            responseHallsVo.setHallType(hallDictT.getShowName());
-
-            list.add(responseHallsVo);
-        }
-        return list;
-    }
 
     @Override
     public Integer selectCount(String hallNams) {
