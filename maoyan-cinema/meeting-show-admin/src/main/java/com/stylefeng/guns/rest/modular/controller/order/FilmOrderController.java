@@ -4,6 +4,7 @@ import com.stylefeng.guns.rest.modular.controller.order.vo.FilmOrderVo;
 import com.stylefeng.guns.rest.modular.controller.order.vo.ReqeustOrderVO;
 import com.stylefeng.guns.rest.modular.service.order.IFilmOrder;
 import com.stylefeng.guns.rest.modular.vo.ResponseVO;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +29,7 @@ public class FilmOrderController {
 
         List<FilmOrderVo> list =  filmOrder.findAllFilmOrder(reqeustOrderVO);
 
-        Integer count = filmOrder.selectCount();
+        Integer count = filmOrder.selectCount(reqeustOrderVO.getOrderId());
 
         return ResponseVO.success(count,list);
     }

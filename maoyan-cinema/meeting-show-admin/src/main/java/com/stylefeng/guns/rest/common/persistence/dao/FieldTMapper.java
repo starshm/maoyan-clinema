@@ -18,4 +18,6 @@ import java.util.List;
 public interface FieldTMapper extends BaseMapper<FieldT> {
 
     List<ResponseHallsVo> selectHallPage(@Param("hallName") String hallNams, @Param("nowPage") Integer nowPage, @Param("pageSize") Integer pageSize);
+
+    Integer selectCountByFilmId(Integer filmId);
 }

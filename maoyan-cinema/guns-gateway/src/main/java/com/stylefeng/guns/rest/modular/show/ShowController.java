@@ -22,9 +22,9 @@ public class ShowController {
     )
     private ShowServiceAPI showServiceAPI;
 
-    @RequestMapping("/list")
-    public String getList(){
-        String list = showServiceAPI.getList();
-        return list;
+    @RequestMapping("/getAllShows")
+    public String getAllShows(){
+
+        return null;
     }
 }

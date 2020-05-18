@@ -99,36 +99,72 @@ public class HallServiceImpl implements IHallService {
         Integer count = fieldTMapper.insert(fieldT);
         Integer fieldId = fieldT.getUuid();
         if(fieldId != null){
-            FilmT filmT = filmTMapper.selectById(requestAddHallVo.getFilmId());
-            FilmInfoT filmInfoT = filmInfoTMapper.selectById(requestAddHallVo.getFilmId());
 
-            HallFilmInfoT hallFilmInfoT = new HallFilmInfoT();
-            hallFilmInfoT.setFilmId(requestAddHallVo.getFilmId());
-            hallFilmInfoT.setFilmName(filmT.getFilmName());
-            hallFilmInfoT.setFilmLength(filmInfoT.getFilmLength()+"");
-            hallFilmInfoT.setFilmLanguage("国语");
-            hallFilmInfoT.setImgAddress(filmT.getImgAddress());
-            // 分类转换
-            String catsId = filmT.getFilmCats();
-            String catNames = getCatsNamesFromCatIds(catsId);
-            hallFilmInfoT.setFilmCats(catNames);
-            // 演员转换
-            String[] actors = filmTMapper.selectFilmActorsById(filmT.getUuid());
-            String actorName = actors[0];
-            for (int i = 1; i < actors.length; i++) {
-                actorName+="," + actors[i];
+            HallFilmInfoT hallInfoFlag = hallFilmInfoTMapper.selectHallInfoByFilmId(requestAddHallVo.getFilmId());
+            if(hallInfoFlag == null){
+                FilmT filmT = filmTMapper.selectById(requestAddHallVo.getFilmId());
+                FilmInfoT filmInfoT = filmInfoTMapper.selectById(requestAddHallVo.getFilmId());
+
+                HallFilmInfoT hallFilmInfoT = new HallFilmInfoT();
+                hallFilmInfoT.setFilmId(requestAddHallVo.getFilmId());
+                hallFilmInfoT.setFilmName(filmT.getFilmName());
+                hallFilmInfoT.setFilmLength(filmInfoT.getFilmLength()+"");
+                hallFilmInfoT.setFilmLanguage("国语");
+                hallFilmInfoT.setImgAddress(filmT.getImgAddress());
+                // 分类转换
+                String catsId = filmT.getFilmCats();
+                String catNames = getCatsNamesFromCatIds(catsId);
+                hallFilmInfoT.setFilmCats(catNames);
+                // 演员转换
+                String[] actors = filmTMapper.selectFilmActorsById(filmT.getUuid());
+                String actorName = actors[0];
+                for (int i = 1; i < actors.length; i++) {
+                    actorName+="," + actors[i];
+                }
+                hallFilmInfoT.setActors(actorName);
+
+                Integer insert = hallFilmInfoTMapper.insert(hallFilmInfoT);
+                System.out.println(insert);
+                if(hallFilmInfoT.getUuid() != null){
+                    return true;
+                }else {
+                    return false;
+                }
             }
-            hallFilmInfoT.setActors(actorName);
-
-            Integer insert = hallFilmInfoTMapper.insert(hallFilmInfoT);
-            System.out.println(insert);
-            if(hallFilmInfoT.getUuid() != null){
-                return true;
-            }
-
+            return true;
         }
 
         return false;
+    }
+
+    @Override
+    public boolean deleteHall(Integer fieldId) {
+        Integer integer = fieldTMapper.deleteById(fieldId);
+        if(integer == 1){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public boolean deleteHallFilmInfo(Integer filmId) {
+//        EntityWrapper<FieldT> entityWrapper = new EntityWrapper();
+//        entityWrapper.eq("film_id",filmId);
+
+//        Integer count = fieldTMapper.selectCount(entityWrapper);
+
+        Integer count = fieldTMapper.selectCountByFilmId(filmId);
+        if(count > 0){
+            return true;
+        }else{
+            Integer result = hallFilmInfoTMapper.deleteByFilmId(filmId);
+            if(result > 0){
+                return true;
+            }else{
+                return false;
+            }
+        }
     }
 
     private String getCatsNamesFromCatIds(String catsId) {

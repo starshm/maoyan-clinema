@@ -13,7 +13,8 @@ import java.util.List;
 public interface IFilmOrder {
     List<FilmOrderVo> findAllFilmOrder(ReqeustOrderVO reqeustOrderVO);
 
-    Integer selectCount();
 
     Integer deleteFilmOrderById(String uuid);
+
+    Integer selectCount(String orderId);
 }

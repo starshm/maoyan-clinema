@@ -57,6 +57,21 @@ public class HallController {
         return ResponseVO.serviceFail("添加失败");
     }
 
+    @GetMapping("/deleteOneHall")
+    public ResponseVO deleteOneHall(
+            @RequestParam("fieldId") Integer fieldId,
+            @RequestParam("filmId") Integer filmId){
+        boolean flag = hallService.deleteHall(fieldId);
+        if(flag){
+           boolean flag2 = hallService.deleteHallFilmInfo(filmId);
+           if(flag2){
+               return ResponseVO.success("删除成功");
+           }
+        }
+        return ResponseVO.serviceFail("删除失败,请联系管理员");
+
+    }
+
 }
 
 

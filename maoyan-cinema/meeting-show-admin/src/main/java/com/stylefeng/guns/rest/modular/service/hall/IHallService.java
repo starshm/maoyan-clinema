@@ -20,4 +20,8 @@ public interface IHallService {
     ResponseCinemaFilmHall findAllCinemaFilmHall();
 
     boolean save(RequestAddHallVo requestAddHallVo);
+
+    boolean deleteHall(Integer fieldId);
+
+    boolean deleteHallFilmInfo(Integer filmId);
 }

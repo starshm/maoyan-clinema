@@ -34,14 +34,19 @@ public class FilmOrderImpl implements IFilmOrder {
         return orders;
     }
 
-    @Override
-    public Integer selectCount() {
-
-        return order2020TMapper.selectCount(new EntityWrapper<>());
-    }
 
     @Override
     public Integer deleteFilmOrderById(String uuid) {
         return order2020TMapper.deleteById(uuid);
+    }
+
+    @Override
+    public Integer selectCount(String orderId) {
+        EntityWrapper entityWrapper = new EntityWrapper();
+        if(!StringUtils.isEmpty(orderId)){
+            entityWrapper.like("UUID",orderId);
+        }
+        Integer count = order2020TMapper.selectCount(entityWrapper);
+        return count;
     }
 }

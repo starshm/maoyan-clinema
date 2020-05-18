@@ -48,11 +48,10 @@
         f.`hall_name`,
         f.`price`
         FROM
-        hall_film_info_t info
-        LEFT JOIN
-        field_t f
-        ON f.`film_id` = info.`film_id`
-        AND f.`cinema_id` = ${cinemaId}
+         hall_film_info_t info, field_t f
+		WHERE
+         f.`film_id` = info.`film_id`
+        AND f.`cinema_id` = #{cinemaId}
     </select>
 
     <select id="getHallInfo" parameterType="java.lang.Integer" resultType="com.stylefeng.guns.api.cinema.vo.HallInfoVO">
@@ -69,7 +68,7 @@
     </select>
 
     <select id="getFilmInfoById" parameterType="java.lang.Integer" resultType="com.stylefeng.guns.api.cinema.vo.FilmInfoVO">
-        SELECT
+        SELECT DISTINCT
         f.`film_id` AS filmId,
         info.`film_name` AS filmName,
         info.`film_length` AS filmLength,

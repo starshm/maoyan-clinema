@@ -42,4 +42,12 @@
         </if>
         LIMIT #{nowPage},#{pageSize}
     </select>
+
+    <select id="selectCountByFilmId" resultType="integer" parameterType="integer">
+        SELECT COUNT(1)
+        FROM field_t
+        WHERE film_id = #{filmId}
+        ORDER BY film_id
+    </select>
+
 </mapper>

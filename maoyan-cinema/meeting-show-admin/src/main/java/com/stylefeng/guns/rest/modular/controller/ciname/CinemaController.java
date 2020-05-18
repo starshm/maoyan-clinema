@@ -70,7 +70,6 @@ public class CinemaController {
             return ResponseVO.serviceFail("添加失败");
         }
 
-//        int count = cinemaService.save(cinemaT);
         int count = cinemaService.saveOrUpdate(cinemaT);
         if(count == 1){
             return ResponseVO.success(count);
